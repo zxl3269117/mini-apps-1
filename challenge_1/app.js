@@ -5,9 +5,75 @@ console.log('app running');
 /************************************************************/
 
 var gameData = {
-  gameBoard: [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
+  gameBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   xIsPlaying: true,
   gameResult: null
+}
+
+/************************************************************/
+/*>>>>> CONTROLLER <<<<<<*/
+/************************************************************/
+
+var checkWinner = () => {
+ var winning = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  for (var i = 0; i < winning.length; i++) {
+    var a = document.getElementById(winning[i][0]).value;
+    var b = document.getElementById(winning[i][1]).value;
+    var c = document.getElementById(winning[i][2]).value;
+
+    if (a === b && b === c) {
+      gameData.gameResult = a;
+      return true;
+    }
+  }
+
+  // winner not found
+  return false;
+
+}
+
+/**
+ * FOUNCTION1: click on game board
+ * detects player click on the table
+ * handle the click by:
+ *   1. Update game board in MODEL
+ *   2. Rerender the view to show the updated game board
+ *   3. check Winner
+ */
+
+var handleClick = (event) => {
+  // add the text node to the clicked cell
+  console.log(event.target);
+  var id = event.target.id;
+
+  // update the player data
+  gameData.gameBoard[id] = gameData.xIsPlaying ? 'X' : 'O';
+  gameData.xIsPlaying = !gameData.xIsPlaying;
+
+  if (checkWinner()) {
+    // disable game play ==>  remove all event listner in table?
+  }
+
+  renderView();
+}
+
+var handleGameReset = () => {
+  // reset model
+  gameData.gameBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  gameData.xIsPlaying = true;
+  gameData.gameResult = null;
+  // call the render
+  renderView();
 }
 
 /************************************************************/
@@ -46,18 +112,18 @@ var renderGameBoard = () => {
     var row = document.createElement("tr");
     for (var j = 0; j < 3; j++) {
       var cell = document.createElement("td");
-      cell.id = i * 3 + j;
+      var id = i * 3 + j;
+      cell.id = id;
 
       // if game board at i, j has occupied by a player
-      var cellData = gameData.gameBoard[i][j];
+      var cellData = gameData.gameBoard[id];
       if (cellData === 0) {
         // var cellText = document.createTextNode(" ");
-        var cellText = document.createTextNode("___");
+        var cellText = document.createTextNode("__");
       }
       if (cellData !== 0) {
-        var cellText = document.createTextNode(gameData.gameBoard[i][j]);
+        var cellText = document.createTextNode(gameData.gameBoard[id]);
       }
-      cell.addEventListener("click", handleClick);
       cell.appendChild(cellText);
       row.appendChild(cell);
     }
@@ -73,7 +139,6 @@ var renderGameBoard = () => {
 var resetButton = () => {
   var button = document.createElement("button");
   button.innerHTML = "Reset the game board";
-  button.addEventListener("click", handleGameReset);
   if (gameData.gameResult) {
     button.setAttribute("disabled", false);
   } else {
@@ -82,6 +147,19 @@ var resetButton = () => {
   app.appendChild(button);
 }
 
+// add event listeners
+var addListener = () => {
+  for (var i = 0; i < 9; i++) {
+    var cell = document.getElementById(i + "");
+    console.log(cell);
+    cell.addEventListener("click", handleClick);
+  }
+
+  var button = document.querySelector("button");
+  button.addEventListener("click", handleGameReset);
+};
+
+// render views
 var renderView = () => {
   // clears the app for before rendering
   app.innerHTML = '';
@@ -89,66 +167,9 @@ var renderView = () => {
   resetButton();
   gameStatus();
   renderGameBoard();
+  addListener();
+  console.log('executed?');
 }
 
 // initialize the app
 renderView();
-
-/************************************************************/
-/*>>>>> CONTROLLER <<<<<<*/
-/************************************************************/
-/**
- * FUNCTION2: win or tie
- * checker winner, update the model
- * disable click event on the board
- */
-
-var checkWinner = () => {
- var winning = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-
-  for (var i = 0; i < winning.length; i++) {
-    var a = document.getElementById(winning[i][0]).value;
-    var b = document.getElementById(winning[i][1]).value;
-    var c = document.getElementById(winning[i][2]).value;
-
-    if (a === b && b === c) {
-      return gameData.gameResult = a;
-      // disable the click function of all table cells
-    }
-  }
-
-}
-
-/**
- * FOUNCTION1: click on game board
- * detects player click on the table
- * handle the click by:
- *   1. Update game board in MODEL
- *   2. Rerender the view to show the updated game board
- *   3. check Winner
- */
-
-var handleClick = (event) => {
-  // add the text node to the clicked cell
-  console.log(event);
-  gameData.xIsPlaying = !gameData.xIsPlaying;
-  checkWinner();
-}
-
-var handleGameReset = () => {
-  // reset model
-  gameData.gameBoard = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-  gameData.xIsPlaying = true;
-  gameData.gameResult = null;
-  // call the render
-  renderView();
-}
