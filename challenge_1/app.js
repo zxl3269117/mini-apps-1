@@ -27,12 +27,12 @@ var checkWinner = () => {
   ];
 
   for (var i = 0; i < winning.length; i++) {
-    var a = document.getElementById(winning[i][0]).value;
-    var b = document.getElementById(winning[i][1]).value;
-    var c = document.getElementById(winning[i][2]).value;
+    var [a, b, c] = winning[i];
 
-    if (a === b && b === c) {
-      gameData.gameResult = a;
+    console.log(a, b, c);
+    if ((gameData.gameBoard[a] === 'X' || gameData.gameBoard[a] === 'O')
+      && gameData.gameBoard[a] === gameData.gameBoard[b] && gameData.gameBoard[b] === gameData.gameBoard[c]) {
+      gameData.gameResult = gameData.gameBoard[a];
       return true;
     }
   }
@@ -52,8 +52,6 @@ var checkWinner = () => {
  */
 
 var handleClick = (event) => {
-  // add the text node to the clicked cell
-  console.log(event.target);
   var id = event.target.id;
 
   // update the player data
@@ -147,11 +145,10 @@ var resetButton = () => {
   app.appendChild(button);
 }
 
-// add event listeners
+// add all event listeners
 var addListener = () => {
   for (var i = 0; i < 9; i++) {
     var cell = document.getElementById(i + "");
-    console.log(cell);
     cell.addEventListener("click", handleClick);
   }
 
@@ -168,7 +165,6 @@ var renderView = () => {
   gameStatus();
   renderGameBoard();
   addListener();
-  console.log('executed?');
 }
 
 // initialize the app
