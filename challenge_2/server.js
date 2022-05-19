@@ -28,7 +28,37 @@ var template = (csv) => {
 
 // Convert JSON to CSV
 var csvMaker = (json) => {
+  // still battling between create the csv string on the go or after parse json.
 
+
+
+  var convertedObj = {};
+  var depth = 0;
+
+  var nodeParser = (node, depth) => {
+    // if at the root of the tree, convert all key names to column names
+    if (depth === 0) {
+     var keys = Object.keys(json);
+     keys.pop();
+     convertedObj.depth = keys;
+    }
+
+    // BASE CASE
+
+    // RECURSIVE CASE
+    // iterate through through the json
+      // if there is new column name
+        // push it to the column name array
+
+      // create a ROW array with values in each object, if an object does not have a value for a column,
+         // skip with a null as position holder
+      // after creation of each ROW array push the array to the csvArray
+
+  }
+
+  // once recursion completed, conver the obj to a string
+  // iterate through obj
+    //
 }
 
 app.use(express.static('client'));
@@ -45,7 +75,7 @@ app.post('/json_file', (req, res) => {
   var csv = csvMaker(json);
 
   // compose the response to client
-  res.status(201).send(template(csv))
+  res.status(201).send(template(csv)) // csv has to be in string format?
   res.end('end')
 })
 
