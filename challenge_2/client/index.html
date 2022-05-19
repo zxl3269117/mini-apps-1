@@ -8,9 +8,9 @@
 
   <body>
     <h1>CSV Report Generator</h1>
-    <form action="/" method="post" class="file">
+    <form action="/json_file" method="post" enctype="application/json" id="form">
       <p for="json">Enter the JSON data you want to covert to CSV:</p>
-      <textarea name="json" id="json" rows="10" cols="50"></textarea>
+      <textarea name="file" rows="10" cols="50"></textarea>
       <input type="submit" value="Convert!">
     </form>
 
