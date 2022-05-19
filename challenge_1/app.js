@@ -28,29 +28,15 @@ var checkWinner = () => {
 
   for (var i = 0; i < winning.length; i++) {
     var [a, b, c] = winning[i];
-
-    console.log(a, b, c);
     if ((gameData.gameBoard[a] === 'X' || gameData.gameBoard[a] === 'O')
       && gameData.gameBoard[a] === gameData.gameBoard[b] && gameData.gameBoard[b] === gameData.gameBoard[c]) {
       gameData.gameResult = gameData.gameBoard[a];
-      return true;
     }
   }
 
-  // winner not found
-  return false;
-
 }
 
-/**
- * FOUNCTION1: click on game board
- * detects player click on the table
- * handle the click by:
- *   1. Update game board in MODEL
- *   2. Rerender the view to show the updated game board
- *   3. check Winner
- */
-
+// Handle game playing
 var handleClick = (event) => {
   var id = event.target.id;
 
@@ -58,19 +44,17 @@ var handleClick = (event) => {
   gameData.gameBoard[id] = gameData.xIsPlaying ? 'X' : 'O';
   gameData.xIsPlaying = !gameData.xIsPlaying;
 
-  if (checkWinner()) {
-    // disable game play ==>  remove all event listner in table?
-  }
+  checkWinner();
 
   renderView();
 }
 
+// Restart the game
 var handleGameReset = () => {
-  // reset model
   gameData.gameBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   gameData.xIsPlaying = true;
   gameData.gameResult = null;
-  // call the render
+
   renderView();
 }
 
@@ -78,16 +62,9 @@ var handleGameReset = () => {
 /*>>>>> VIEW <<<<<<*/
 /************************************************************/
 
-/**
- * a <h2>: display winner or tie (use disabled attribute to only show when there's a result)
- * a <h4>: display which player is playing
- * a <table>: the game board
- * a <button>: to reset the game. Only appears when one game ends (use disabled attribute)
- */
-
 var app = document.getElementById("app");
 
-// Game status view
+// Game status
 var gameStatus = () => {
   var gameStatus = document.createElement("h4");
   var winner = gameData.gameResult;
@@ -102,7 +79,7 @@ var gameStatus = () => {
   app.appendChild(gameStatus);
 }
 
-// Game board view
+// Game board
 var renderGameBoard = () => {
   var tb = document.createElement("table");
   var tbapp = document.createElement("tapp");
@@ -113,10 +90,9 @@ var renderGameBoard = () => {
       var id = i * 3 + j;
       cell.id = id;
 
-      // if game board at i, j has occupied by a player
+      // if game board at row i, column j has occupied by a player
       var cellData = gameData.gameBoard[id];
       if (cellData === 0) {
-        // var cellText = document.createTextNode(" ");
         var cellText = document.createTextNode("__");
       }
       if (cellData !== 0) {
@@ -133,30 +109,27 @@ var renderGameBoard = () => {
   app.appendChild(tb);
 }
 
-// game reset button
+// Game reset button
 var resetButton = () => {
   var button = document.createElement("button");
   button.innerHTML = "Reset the game board";
-  if (gameData.gameResult) {
-    button.setAttribute("disabled", false);
-  } else {
-    button.setAttribute("disabled", true);
-  }
   app.appendChild(button);
 }
 
-// add all event listeners
+// Add all event listeners
 var addListener = () => {
-  for (var i = 0; i < 9; i++) {
-    var cell = document.getElementById(i + "");
-    cell.addEventListener("click", handleClick);
+  if (!gameData.gameResult) {
+    for (var i = 0; i < 9; i++) {
+      var cell = document.getElementById(i + "");
+      cell.addEventListener("click", handleClick);
+    }
   }
 
   var button = document.querySelector("button");
   button.addEventListener("click", handleGameReset);
 };
 
-// render views
+// Render all views
 var renderView = () => {
   // clears the app for before rendering
   app.innerHTML = '';
@@ -167,5 +140,5 @@ var renderView = () => {
   addListener();
 }
 
-// initialize the app
+// Initialize the app
 renderView();
