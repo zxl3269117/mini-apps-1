@@ -7,6 +7,7 @@ const port = 3000;
 app.use(express.static('client'));
 
 app.post('/', (req, res) => {
+  res.send("hello world!");
 
 })
 
