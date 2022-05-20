@@ -45,7 +45,6 @@ var handleClick = (event) => {
   gameData.xIsPlaying = !gameData.xIsPlaying;
 
   checkWinner();
-
   renderView();
 }
 
