@@ -21,62 +21,80 @@ var template = (csv) => {
         <input type="submit" value="Convert!">
       </form>
 
-      <p>${csv}</p>
+      <div id="csv">${csv}</div>
     </body>
   </html>`
 }
 
 // Convert JSON to CSV
 var csvMaker = (json) => {
-  // still battling between create the csv string on the go or after parse json.
 
+  var convertedArr = [];
 
+  // Get all keys of the json as the columns of the csv report
+  var columns = Object.keys(json);
+  columns.pop(); // take out children as the column
+  convertedArr.push(columns);
 
-  var convertedObj = {};
-  var depth = 0;
-
-  var nodeParser = (node, depth) => {
-    // if at the root of the tree, convert all key names to column names
-    if (depth === 0) {
-     var keys = Object.keys(json);
-     keys.pop();
-     convertedObj.depth = keys;
+  // Parse all nodes in json
+  var nodeParser = (node) => {
+    var row = [];
+    for (var key in node) {
+      // do not add value from the children property
+      if (key === 'children') {
+        break;
+      }
+      // when node has property that the columns do not have, add the key to columns
+      if (!columns.includes(key)) {
+        convertedArr[0].push(key);
+      }
+      // node has matching value to columns, add it in, otherwise, add null
+      if (node[key]) {
+        row.push(node[key]);
+      } else {
+        row.push(null);
+      }
     }
+    // add row into the convertedArr
+    convertedArr.push(row);
 
     // BASE CASE
+    if (node.children.length === 0) {
+      return;
+    }
 
     // RECURSIVE CASE
-    // iterate through through the json
-      // if there is new column name
-        // push it to the column name array
-
-      // create a ROW array with values in each object, if an object does not have a value for a column,
-         // skip with a null as position holder
-      // after creation of each ROW array push the array to the csvArray
-
+    node.children.forEach((childNode) => {
+      nodeParser(childNode);
+    });
   }
 
-  // once recursion completed, conver the obj to a string
-  // iterate through obj
-    //
+  nodeParser(json);
+
+  var csvStr = '';
+  convertedArr.forEach((row) => {
+    // join the row array with ',' and wrap it with <p> element
+    var rowStr = '<p>';
+    rowStr += row.join(', ');
+    rowStr += '</p>';
+    csvStr += rowStr;
+  })
+  return csvStr;
 }
 
 app.use(express.static('client'));
 app.use(bodyParser.urlencoded());
 
 app.post('/json_file', (req, res) => {
-  // console.log('heard');
-  // console.log(req.body);
+  // clean up the json file
   var body = req.body.file.replace('\r\n', '').replace(';', '');
   var json = JSON.parse(body);
-  // console.log(jsonFile);
 
   // convert jsonFile to csv
   var csv = csvMaker(json);
 
   // compose the response to client
-  res.status(201).send(template(csv)) // csv has to be in string format?
-  res.end('end')
+  res.status(201).send(template(csv));
 })
 
 app.listen(port, () => {
