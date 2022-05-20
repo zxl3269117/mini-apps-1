@@ -15,9 +15,9 @@ var template = (csv) => {
 
     <body>
       <h1>CSV Report Generator</h1>
-      <form action="/json_file" method="post" enctype="application/json" id="form">
-        <p for="json">Enter the JSON data you want to covert to CSV:</p>
-        <textarea name="file" rows="10" cols="50"></textarea>
+      <form action="/json_file" method="post" enctype="multipart/form-data" id="form">
+        <p for="json">Upload the JSON file you want to covert to CSV:</p>
+        <input type="file" name="file" accept=".json">
         <input type="submit" value="Convert!">
       </form>
 
