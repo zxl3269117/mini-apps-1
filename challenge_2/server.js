@@ -4,6 +4,31 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
+app.use(express.static('client'));
+app.use(bodyParser.raw({type: 'multipart/form-data'}));
+
+app.post('/convert', (req, res) => {
+
+  // clean up the json file
+  var filestr = String(req.body);
+  var cleaning = filestr.slice(filestr.indexOf('{'));
+  var body = cleaning.slice(0, cleaning.indexOf('--'));
+  var json = JSON.parse(body);
+
+  // convert jsonFile to csv
+  var csv = csvMaker(json);
+  res.status(201).send(template(csv));
+})
+
+app.listen(port, () => {
+  console.log(`server is listening on port ${port}`);
+})
+
+/************************************************************/
+/*>>>>> UTILITY FUNCTIONS <<<<<<*/
+/************************************************************/
+
+// Templating of response body
 var template = (csv) => {
   return `<!DOCTYPE html>
   <html>
@@ -15,7 +40,7 @@ var template = (csv) => {
 
     <body>
       <h1>CSV Report Generator</h1>
-      <form action="/json_file" method="post" enctype="multipart/form-data" id="form">
+      <form action="/convert" method="post" enctype="multipart/form-data" id="form">
         <p for="json">Upload the JSON file you want to covert to CSV:</p>
         <input type="file" name="file" accept=".json">
         <input type="submit" value="Convert!">
@@ -81,22 +106,3 @@ var csvMaker = (json) => {
   })
   return csvStr;
 }
-
-app.use(express.static('client'));
-app.use(bodyParser.urlencoded());
-
-app.post('/json_file', (req, res) => {
-  // clean up the json file
-  var body = req.body.file.replace('\r\n', '').replace(';', '');
-  var json = JSON.parse(body);
-
-  // convert jsonFile to csv
-  var csv = csvMaker(json);
-
-  // compose the response to client
-  res.status(201).send(template(csv));
-})
-
-app.listen(port, () => {
-  console.log(`server is listening on port ${port}`);
-})
