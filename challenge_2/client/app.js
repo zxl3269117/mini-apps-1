@@ -1,5 +1,6 @@
 $(document).ready(() => {
   var $form = $('#form');
+  var $csv = $('#csv');
 
   // add event handler to form id="form"
   var handleFormSubmit = (event) => {
@@ -18,15 +19,22 @@ $(document).ready(() => {
       data: fd
     })
     .done((response) => {
-      // clear the DIV that shows csv response
-      var $csv = $('#csv');
+      // clear the csv div
       $csv.html('');
-      // render the view by append the response to id="csv"
-      console.log('response data', response);
-      $csv.append(response);
+
+      // construct the csv file link from response
+      var csvContent = response.map(row => row.join(', ')).join('\n');
+      var blob = new Blob([csvContent], {type: 'data:text/csv;charset=utf-8;'});
+      var link = URL.createObjectURL(blob);
+
+      // create and append the download element to the DOM
+      var $downloadLink = $('<a>Converted File</a>');
+      $downloadLink.attr('href', link);
+      $downloadLink.attr('download', 'converted-csv-file.csv');
+      $csv.append($downloadLink);
     })
     .fail((err) => {
-      console.log(err);
+      throw err;
     });
   }
 

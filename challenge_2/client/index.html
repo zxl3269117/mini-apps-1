@@ -9,13 +9,14 @@
 
   <body>
     <h1>CSV Report Generator</h1>
-    <!-- <form action="/convert" method="post" enctype="multipart/form-data" id="form"> -->
       <form id="form" enctype="multipart/form-data">
-      <p for="json">Upload the JSON file you want to covert to CSV:</p>
+      <h4>Upload the JSON file you want to covert to CSV:</h4>
       <input type="file" name="file" id="json_file" accept=".json">
       <input type="submit" value="Convert!">
     </form>
-    <div id="csv"></div>
+    <h4>Download the converted file here:</h4>
+    <div id="csv">
+    </div>
     <script src="app.js"></script>
 
   </body>

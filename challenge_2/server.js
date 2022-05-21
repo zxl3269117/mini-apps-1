@@ -6,7 +6,6 @@ const port = 3000;
 
 app.use(express.static('client'));
 app.use(bodyParser.raw({type: 'multipart/form-data'}));
-// bodyParser.urlencoded()
 
 app.post('/convert', (req, res) => {
 
@@ -18,10 +17,11 @@ app.post('/convert', (req, res) => {
 
   // convert jsonFile to csv
   var csv = csvMaker(json);
-  // response with only the csv, client will handle DOM appending without refreshing
+  // response with only the csv format (arrray of arrays), client will handle DOM update
   res.status(201).send(csv);
 })
 
+// server listening on port
 app.listen(port, () => {
   console.log(`server is listening on port ${port}`);
 })
@@ -30,7 +30,6 @@ app.listen(port, () => {
 /*>>>>> UTILITY FUNCTIONS <<<<<<*/
 /************************************************************/
 
-
 // Convert JSON to CSV
 var csvMaker = (json) => {
 
@@ -38,14 +37,15 @@ var csvMaker = (json) => {
 
   // Get all keys of the json as the columns of the csv report
   var columns = Object.keys(json);
-  columns.pop(); // take out children as the column
+  columns.pop(); // take out children from the columns
   convertedArr.push(columns);
 
   // Parse all nodes in json
   var nodeParser = (node) => {
     var row = [];
     for (var key in node) {
-      // do not add value from the children property
+
+      // should not add value from the children property
       if (key === 'children') {
         break;
       }
@@ -60,7 +60,7 @@ var csvMaker = (json) => {
         row.push(null);
       }
     }
-    // add row into the convertedArr
+    // add row to the convertedArr
     convertedArr.push(row);
 
     // BASE CASE
@@ -76,15 +76,7 @@ var csvMaker = (json) => {
 
   nodeParser(json);
 
-  // constructing the response with html DOM csv
-  var csvStr = '';
-  convertedArr.forEach((row) => {
-    var rowStr = '<p>';
-    rowStr += row.join(', ');
-    rowStr += '</p>';
-    csvStr += rowStr;
-  })
-  return csvStr;
+  return convertedArr;
 }
 
 
