@@ -1,4 +1,6 @@
-console.log('app running');
+console.log('app is running');
+
+var app = document.getElementById("app");
 
 /************************************************************/
 /*>>>>> MODEL <<<<<<*/
@@ -14,6 +16,7 @@ var gameData = {
 /*>>>>> CONTROLLER <<<<<<*/
 /************************************************************/
 
+// check if there is a winner
 var checkWinner = () => {
  var winning = [
     [0, 1, 2],
@@ -33,7 +36,6 @@ var checkWinner = () => {
       gameData.gameResult = gameData.gameBoard[a];
     }
   }
-
 }
 
 // Handle game playing
@@ -61,9 +63,7 @@ var handleGameReset = () => {
 /*>>>>> VIEW <<<<<<*/
 /************************************************************/
 
-var app = document.getElementById("app");
-
-// Game status
+// Game status view
 var gameStatus = () => {
   var gameStatus = document.createElement("h4");
   var winner = gameData.gameResult;
@@ -78,7 +78,7 @@ var gameStatus = () => {
   app.appendChild(gameStatus);
 }
 
-// Game board
+// Game board view
 var renderGameBoard = () => {
   var tb = document.createElement("table");
   var tbapp = document.createElement("tapp");
@@ -113,14 +113,21 @@ var resetButton = () => {
   var button = document.createElement("button");
   button.innerHTML = "Reset the game board";
   app.appendChild(button);
+  // app.appendChild(document.createElement("p"));
 }
 
 // Add all event listeners
 var addListener = () => {
+
+  // should not add event listener to game board cells if there is a winner
   if (!gameData.gameResult) {
     for (var i = 0; i < 9; i++) {
       var cell = document.getElementById(i + "");
-      cell.addEventListener("click", handleClick);
+
+      // should not add event listener to occupied cell
+      if (cell.innerHTML === "__") {
+        cell.addEventListener("click", handleClick);
+      }
     }
   }
 
