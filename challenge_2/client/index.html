@@ -4,16 +4,19 @@
     <title>
       CSV Report Generator
     </title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
 
   <body>
     <h1>CSV Report Generator</h1>
-    <form action="/convert" method="post" enctype="multipart/form-data" id="form">
+    <!-- <form action="/convert" method="post" enctype="multipart/form-data" id="form"> -->
+      <form id="form" enctype="multipart/form-data">
       <p for="json">Upload the JSON file you want to covert to CSV:</p>
-      <input type="file" name="file" accept=".json">
-      <!--<textarea name="file" rows="10" cols="50"></textarea>-->
+      <input type="file" name="file" id="json_file" accept=".json">
       <input type="submit" value="Convert!">
     </form>
+    <div id="csv"></div>
+    <script src="app.js"></script>
 
   </body>
 </html>

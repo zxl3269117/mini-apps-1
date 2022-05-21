@@ -6,6 +6,7 @@ const port = 3000;
 
 app.use(express.static('client'));
 app.use(bodyParser.raw({type: 'multipart/form-data'}));
+// bodyParser.urlencoded()
 
 app.post('/convert', (req, res) => {
 
@@ -17,7 +18,8 @@ app.post('/convert', (req, res) => {
 
   // convert jsonFile to csv
   var csv = csvMaker(json);
-  res.status(201).send(template(csv));
+  // response with only the csv, client will handle DOM appending without refreshing
+  res.status(201).send(csv);
 })
 
 app.listen(port, () => {
@@ -28,28 +30,6 @@ app.listen(port, () => {
 /*>>>>> UTILITY FUNCTIONS <<<<<<*/
 /************************************************************/
 
-// Templating of response body
-var template = (csv) => {
-  return `<!DOCTYPE html>
-  <html>
-    <head>
-      <title>
-        CSV Report Generator
-      </title>
-    </head>
-
-    <body>
-      <h1>CSV Report Generator</h1>
-      <form action="/convert" method="post" enctype="multipart/form-data" id="form">
-        <p for="json">Upload the JSON file you want to covert to CSV:</p>
-        <input type="file" name="file" accept=".json">
-        <input type="submit" value="Convert!">
-      </form>
-
-      <div id="csv">${csv}</div>
-    </body>
-  </html>`
-}
 
 // Convert JSON to CSV
 var csvMaker = (json) => {
@@ -96,9 +76,9 @@ var csvMaker = (json) => {
 
   nodeParser(json);
 
+  // constructing the response with html DOM csv
   var csvStr = '';
   convertedArr.forEach((row) => {
-    // join the row array with ',' and wrap it with <p> element
     var rowStr = '<p>';
     rowStr += row.join(', ');
     rowStr += '</p>';
@@ -106,3 +86,27 @@ var csvMaker = (json) => {
   })
   return csvStr;
 }
+
+
+// Templating of response body
+// var template = (csv) => {
+//   return `<!DOCTYPE html>
+//   <html>
+//     <head>
+//       <title>
+//         CSV Report Generator
+//       </title>
+//     </head>
+
+//     <body>
+//       <h1>CSV Report Generator</h1>
+//       <form action="/convert" method="post" enctype="multipart/form-data" id="form">
+//         <p for="json">Upload the JSON file you want to covert to CSV:</p>
+//         <input type="file" name="file" accept=".json">
+//         <input type="submit" value="Convert!">
+//       </form>
+
+//       <div id="csv">${csv}</div>
+//     </body>
+//   </html>`
+// }
