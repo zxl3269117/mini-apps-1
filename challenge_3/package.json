@@ -1,0 +1,24 @@
+{
+  "name": "challenge_3",
+  "version": "1.0.0",
+  "description": "multistep checkout",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "build": "npx babel client/app.jsx --watch --out-dir public --presets=@babel/preset-react --source-maps=inline"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  }
+}
