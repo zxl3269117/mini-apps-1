@@ -34,6 +34,31 @@ class App extends React.Component {
     this.setState(newState);
   }
 
+  // handle checkout button
+  handleCheckout(event) {
+    $.ajax({
+      url: '/checkout',
+      method: 'POST',
+      data: { id: this.state.id }
+    })
+      .done(success => {
+        $.ajax({
+          url: '/checkout',
+          method: 'GET'
+        })
+          .done(res => {
+            console.log(res);
+            this.setState({ component: res.component})
+          })
+          .fail(err => {
+            console.log(err);
+          })
+      })
+      .fail(err => {
+        console.log(err);
+      })
+  }
+
   // handle next (submit) on forms
   handleNext(event) {
     event.preventDefault();
@@ -62,15 +87,13 @@ class App extends React.Component {
 
   }
 
-  // handle checkout button
-  handleCheckout(event) {
-  }
 
   // handle purchase button
   handlePurchase(event) {
   }
 
   render() {
+    console.log('render()');
     // conditional rendering component based on this.state.current
     var renderForm = (component) => {
       switch(component) {

@@ -11,18 +11,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // initial get when page loads
-app.get('/', (req, res) => {
-
-  // component = components[i]
-  // respond with component
-  res.status(200).send(components[i]);
+app.get('/home', (req, res) => {
+  Models.count((err, response) => {
+    if(err) {
+      res.status(500).send(err);
+    } else {
+      // console.log(response[0]['COUNT(id)']);
+      var count = response[0]['COUNT(id)'];
+      res.status(200).json({ id: count+1, component: components[i++] });
+    }
+  })
 })
 
 // get from checkout page
 app.get('/checkout', (req, res) => {
   // respond with component[i++]
-  res.status(200).send(components[i++]);
-  res.status(200).send('buyer');
+  res.status(200).json({ component: components[i+1] });
+  // res.status(200).send('buyer');
 })
 
 // get from the forms page

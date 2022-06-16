@@ -15,6 +15,18 @@ connection.connect((err) => {
 });
 
 var Models = {
+  // count record in buyers
+  count: (callback) => {
+    var queryStr = 'SELECT COUNT(id) FROM records';
+    connection.query(queryStr, callback);
+  },
+
+  // create
+  create: (id, callback) => {
+    var queryStr = `INSERT INTO records SET id=${id}`;
+    connection.query(queryStr, callback);
+  },
+
   // save
   save: (data, callback) => {
     var keys = Object.keys(data);
@@ -26,17 +38,6 @@ var Models = {
     console.log(sets);
     var queryStr = `UPDATE records SET ${sets} WHERE id=${data.id}`;
     connection.query(queryStr, callback);
-  },
-
-  // create
-  create: (id, callback) => {
-    var queryStr = `INSERT INTO records SET id=${id}`;
-    connection.query(queryStr, callback);
-  },
-
-  // count record in buyers
-  count: (table, callback) => {
-
   }
 }
 
