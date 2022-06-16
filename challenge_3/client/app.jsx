@@ -2,7 +2,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'home',
+      component: '',
+      id: 1,
       name: '',
       email: '',
       password: '',
@@ -10,11 +11,11 @@ class App extends React.Component {
       street2: '',
       city: '',
       state: '',
-      ['zip-code']: '',
-      ['card-number']: '',
-      ['exp-date']: '2022-01-01',
+      ['zip_code']: '',
+      ['card_number']: '',
+      ['exp_date']: '2022-01-01',
       cvv: '',
-      ['billing-zip']: ''
+      ['billing_zip']: ''
     }
 
     this.handelChange = this.handelChange.bind(this);
@@ -28,7 +29,7 @@ class App extends React.Component {
     var key = event.target.name;
     var value = event.target.value;
     var newState = {
-      key: value
+      [key]: value
     }
     this.setState(newState);
   }
@@ -36,7 +37,29 @@ class App extends React.Component {
   // handle next (submit) on forms
   handleNext(event) {
     event.preventDefault();
+
     // send appropriate request to server
+    $.ajax({
+      url: '/forms',
+      method: 'POST',
+      data: this.state
+    })
+      .done((success) => {
+        $.ajax({
+          url: '/forms',
+          method: 'GET'
+        })
+          .done((response) => {
+            console.log(response.data);
+          })
+          .fail((failed) => {
+            console.log(failed);
+          })
+      })
+      .fail((failed) => {
+        console.log(failed);
+      })
+
   }
 
   // handle checkout button
@@ -48,82 +71,112 @@ class App extends React.Component {
   }
 
   render() {
+    // conditional rendering component based on this.state.current
+    var renderForm = (component) => {
+      switch(component) {
+        case 'checkout':
+          return <Checkout handleCheckout={this.handleCheckout}/>;
+          break;
+        case 'buyer':
+        case 'address':
+        case 'card':
+          return <Form state={this.state} handelChange={this.handelChange} handleNext={this.handleNext}/>;
+          break;
+        case 'purchase':
+          return <Purchase state={this.state} handlePurchase={this.handlePurchase}/>;
+          break;
+        default:
+          return <Checkout handleCheckout={this.handleCheckout}/>;
+      }
+    }
+
     return (
       <div>
-        <Checkout handleCheckout={this.handleCheckout}/>
-        <Form state={this.state} handelChange={this.handelChange} handleNext={this.handleNext}/>
-        <Confirmation handlePurchase={this.handlePurchase}/>
+        {renderForm(this.state.component)}
       </div>
     )
   }
 }
 
 function Checkout(props) {
-  return <button onClick={props.handleCheckout}>Checkout</button>
+  return (
+    <button onClick={props.handleCheckout}>Checkout</button>
+  );
 }
 
 function Form(props) {
   var form1 = (
-    <form onSubmit={props.handleNext}>Account
+    <form name="buyer" onSubmit={props.handleNext}>Account Information
     <br></br>
       <label>
         Name:
         <input type="text" name="name" value={props.state.name} onChange={props.handelChange}></input>
       </label>
+      <br></br>
       <label>
         Email:
         <input type="text" name="email" value={props.state.email} onChange={props.handelChange}></input>
       </label>
+      <br></br>
       <label>
         Password:
         <input type="password" name="password" value={props.state.password} onChange={props.handelChange}></input>
       </label>
+      <br></br>
       <input type="submit" value="Next"></input>
     </form>
   );
 
   var form2 = (
-    <form onSubmit={props.handleNext}> Shipping Address
+    <form name="address" onSubmit={props.handleNext}> Shipping Address
     <br></br>
     <label>
       Street line 1:
       <input type="text" name="street1" value={props.state.street1} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       Street line 2:
       <input type="text" name="street2" value={props.state.street2} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       City:
       <input type="text" name="city" value={props.state.city} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       State:
       <input type="text" name="state" value={props.state.state} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       Zip code:
       <input type="text" name="zip-code" value={props.state['zip-code']} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <input type="submit" value="Next"></input>
   </form>
   );
 
   var form3 = (
-    <form onSubmit={props.handleNext}> Payment
+    <form name="card" onSubmit={props.handleNext}> Payment
     <br></br>
     <label>
       Credit card number:
       <input type="text" name="card-number" value={props.state['card-number']} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       Expiration date:
       <input type="date" name="exp-date" value={props.state['exp-date']} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       CVV:
       <input type="text" name="cvv" value={props.state.cvv} onChange={props.handelChange}></input>
     </label>
+    <br></br>
     <label>
       Billing zip code:
       <input type="text" name="billing-zip" value={props.state['billing-zip']} onChange={props.handelChange}></input>
@@ -132,64 +185,35 @@ function Form(props) {
   </form>
   );
 
-  return form3
-    // <div>{form2}</div>
+  switch(props.state.component) {
+    case 'buyer':
+      return form1;
+      break;
+    case 'address':
+      return form2;
+      break;
+    case 'card':
+      return form3;
+      break;
+    default:
+      alert('error retrieving forms');
+  }
 }
 
-function Confirmation(props) {
-  return <button onClick={props.handlePurchase}>Purchase</button>
+function Purchase(props) {
+  var keys = Object.keys(props.state);
+  var fields = keys.slice(2);
+  var confirmation = fields.map((field, index) =>
+    <p keys={index.toString()}>{field}: {props.state[field]}</p>
+  );
+  return (
+    <div>
+      <h4>Order Confirmation</h4>
+      {confirmation}
+      <button onClick={props.handlePurchase}>Purchase</button>
+    </div>
+  )
 }
-
-// class Form2 extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       street1: '',
-//       street2: '',
-//       city: '',
-//       state: '',
-//       city: '',
-//       zip:
-//     };
-//     this.handelChange = this.handelChange.bind(this);
-//     this.handleNext = this.handleNext.bind(this);
-//   }
-
-//   handelChange(event) {
-//     // update the state
-//     var key = event.target.name;
-//     var value = event.target.value;
-//     var newState = {
-//       key: value
-//     }
-//     this.setState(newState);
-//   }
-
-//   handleNext(event) {
-//     event.preventDefault();
-//     // send appropriate request to server
-//   }
-
-//   render() {
-//     return (
-//       <form onSubmit={this.handleNext}>
-//         <label>
-//           Name:
-//           <input type="text" name="name" value={this.state.name} onChange={this.handelChange}></input>
-//         </label>
-//         <label>
-//           Email:
-//           <input type="text" name="email" value={this.state.emal} onChange={this.handelChange}></input>
-//         </label>
-//         <label>
-//           Password:
-//           <input type="password" name="password" value={this.state.name} onChange={this.handelChange}></input>
-//         </label>
-//         <input type="submit" value="Next"></input>
-//       </form>
-//     )
-//   }
-// }
 
 const root = ReactDOM.createRoot(document.getElementById('app'));
 root.render(<App />);
