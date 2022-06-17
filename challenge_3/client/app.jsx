@@ -3,7 +3,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       component: '',
-      id: 1,
+      id: 0,
       name: '',
       email: '',
       password: '',
@@ -30,10 +30,8 @@ class App extends React.Component {
       method: 'GET',
     })
       .done(res => {
-        this.setState({
-          id: res.id,
-          component: res.component
-        })
+        // console.log(res);
+        this.setState(res);
       })
   }
 
@@ -59,8 +57,8 @@ class App extends React.Component {
           method: 'GET'
         })
           .done(res => {
-            console.log(res);
-            this.setState({ component: res.component})
+            // console.log(res);
+            this.setState({ component: res.component, id: res.id });
           })
           .fail(err => {
             console.log(err);
@@ -87,8 +85,8 @@ class App extends React.Component {
           method: 'GET'
         })
           .done(res => {
-            // console.log(res.component);
-            this.setState({ component: res.component });
+            // console.log(res);
+            this.setState(res);
           })
           .fail(failed => {
             console.log(failed);
@@ -108,8 +106,23 @@ class App extends React.Component {
       method: 'GET'
     })
       .done(res => {
-        console.log(res);
-        this.setState(res);
+        // console.log(res);
+        this.setState({
+          component: 'checkout',
+          id: 0,
+          name: '',
+          email: '',
+          password: '',
+          street1: '',
+          street2: '',
+          city: '',
+          state: '',
+          ['zip_code']: '',
+          ['card_number']: '',
+          ['exp_date']: '2022-01-01',
+          cvv: '',
+          ['billing_zip']: ''
+        });
       })
     .fail(err => {
       console.log(err);

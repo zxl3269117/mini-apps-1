@@ -14,7 +14,24 @@ app.use(cookieParser());
 // initialize when page loads
 app.get('/home', (req, res) => {
   if(req.cookies.id) {
-    res.status(200).json({ id: req.cookies.id, component: req.cookies.component});
+    var id = req.cookies.id;
+    Models.fetch(id, (err, response) => {
+      if(err) {
+        console.log(err);
+        res.status(500).send(err);
+      } else {
+        var data = Object.assign(response[0], { component: req.cookies.component });
+
+        // assign empty string to null in data object
+        Object.keys(data).forEach(key => {
+          if(!data[key]) {
+            data[key] = '';
+          }
+        })
+        // console.log(data);
+        res.status(200).json(data);
+      }
+    })
   } else {
     Models.count((err, response) => {
       if(err) {
@@ -35,36 +52,30 @@ app.get('/home', (req, res) => {
 // get from checkout page
 app.get('/checkout', (req, res) => {
   var component = req.cookies.component;
+  var id = req.cookies.id;
   var nextComp = components[components.indexOf(component) + 1];
+
   res.cookie('component', nextComp);
-  res.status(200).json({ component: nextComp });
+  res.status(200).json({ component: nextComp, id });
 })
 
 // get from the forms page
 app.get('/forms', (req, res) => {
   var component = req.cookies.component;
   var nextComp = components[components.indexOf(component) + 1];
+
   res.cookie('component', nextComp);
-  res.status(200).json({ component: nextComp });
+  res.status(200).json({ component: nextComp});
 })
 
 // get the purhcase page
 app.get('/purchase', (req, res) => {
   var id = req.cookies.id;
-  console.log(id);
-  Models.fetch(id, (err, response) => {
-    if (err) {
-      console.log(err);
-    } else {
-      var data = Object.assign(response[0], { component: 'checkout' });
-      id ++;
-      data.id = id;
-      res.cookie('component', 'checkout');
-      res.cookie('id', id.toString());
-      console.log(data);
-      res.status(200).json(data);
-    }
-  })
+  id ++;
+  res.cookie('component', 'checkout');
+  res.cookie('id', id.toString());
+  res.sendStatus(200);
+
 })
 
 // post the checkout
@@ -84,7 +95,6 @@ app.post('/forms', (req, res) => {
   // console.log(req.body);
   var data = req.body;
 
-  // update existing record
   Models.save(data, (err, success) => {
     if (err) {
       console.log(err);
