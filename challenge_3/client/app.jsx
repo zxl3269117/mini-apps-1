@@ -38,7 +38,6 @@ class App extends React.Component {
   }
 
   handelChange(event) {
-    // update corresponding state
     var key = event.target.name;
     var value = event.target.value;
     var newState = {
@@ -88,7 +87,7 @@ class App extends React.Component {
           method: 'GET'
         })
           .done(res => {
-            console.log(res.component);
+            // console.log(res.component);
             this.setState({ component: res.component });
           })
           .fail(failed => {
@@ -104,10 +103,21 @@ class App extends React.Component {
 
   // handle purchase button
   handlePurchase(event) {
+    $.ajax({
+      url: '/purchase',
+      method: 'GET'
+    })
+      .done(res => {
+        console.log(res);
+        this.setState(res);
+      })
+    .fail(err => {
+      console.log(err);
+    })
   }
 
   render() {
-    console.log('render()');
+
     // conditional rendering component based on this.state.current
     var renderForm = (component) => {
       switch(component) {
@@ -189,7 +199,7 @@ function Form(props) {
     <br></br>
     <label>
       Zip code:
-      <input type="text" name="zip-code" value={props.state['zip-code']} onChange={props.handelChange}></input>
+      <input type="text" name="zip_code" value={props.state['zip_code']} onChange={props.handelChange}></input>
     </label>
     <br></br>
     <input type="submit" value="Next"></input>
@@ -201,12 +211,12 @@ function Form(props) {
     <br></br>
     <label>
       Credit card number:
-      <input type="text" name="card-number" value={props.state['card-number']} onChange={props.handelChange}></input>
+      <input type="text" name="card_number" value={props.state['card_number']} onChange={props.handelChange}></input>
     </label>
     <br></br>
     <label>
       Expiration date:
-      <input type="date" name="exp-date" value={props.state['exp-date']} onChange={props.handelChange}></input>
+      <input type="date" name="exp_date" value={props.state['exp_date']} onChange={props.handelChange}></input>
     </label>
     <br></br>
     <label>
@@ -216,7 +226,7 @@ function Form(props) {
     <br></br>
     <label>
       Billing zip code:
-      <input type="text" name="billing-zip" value={props.state['billing-zip']} onChange={props.handelChange}></input>
+      <input type="text" name="billing_zip" value={props.state['billing_zip']} onChange={props.handelChange}></input>
     </label>
     <input type="submit" value="Next"></input>
   </form>

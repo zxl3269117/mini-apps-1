@@ -36,7 +36,13 @@ var Models = {
     });
     var sets = setsArr.join(',');
     // console.log(sets);
-    var queryStr = `UPDATE records SET ${sets} WHERE id=${data.id}`;
+    var queryStr = `UPDATE records SET ${sets} WHERE id="${data.id}"`;
+    connection.query(queryStr, callback);
+  },
+
+  // fetch
+  fetch: (id, callback) => {
+    var queryStr = `SELECT * FROM records WHERE id="${id}"`;
     connection.query(queryStr, callback);
   }
 }
