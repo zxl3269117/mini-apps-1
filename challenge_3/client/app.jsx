@@ -24,6 +24,19 @@ class App extends React.Component {
     this.handlePurchase = this.handlePurchase.bind(this);
   }
 
+  componentDidMount() {
+    $.ajax({
+      url: '/home',
+      method: 'GET',
+    })
+      .done(res => {
+        this.setState({
+          id: res.id,
+          component: res.component
+        })
+      })
+  }
+
   handelChange(event) {
     // update corresponding state
     var key = event.target.name;
@@ -69,19 +82,20 @@ class App extends React.Component {
       method: 'POST',
       data: this.state
     })
-      .done((success) => {
+      .done(success => {
         $.ajax({
           url: '/forms',
           method: 'GET'
         })
-          .done((response) => {
-            console.log(response.data);
+          .done(res => {
+            console.log(res.component);
+            this.setState({ component: res.component });
           })
-          .fail((failed) => {
+          .fail(failed => {
             console.log(failed);
           })
       })
-      .fail((failed) => {
+      .fail(failed => {
         console.log(failed);
       })
 

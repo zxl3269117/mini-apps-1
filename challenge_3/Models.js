@@ -35,7 +35,7 @@ var Models = {
       return `${colName}="${data[colName]}"`;
     });
     var sets = setsArr.join(',');
-    console.log(sets);
+    // console.log(sets);
     var queryStr = `UPDATE records SET ${sets} WHERE id=${data.id}`;
     connection.query(queryStr, callback);
   }
