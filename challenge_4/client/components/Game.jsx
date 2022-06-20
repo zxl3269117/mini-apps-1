@@ -4,8 +4,8 @@ import BoardRow from './BoardRow.jsx';
 const Game = (props) => (
   <div>
     <div className="game-play">{
-      Array.from(Array(10).keys()).map(col => (
-        <button className="play-button" onClick={event => { props.handleClick(col) }}>Drop</button>
+      Array.from(Array(7).keys()).map(col => (
+        <button className={`play-button ${props.player}`} onClick={event => { props.handleClick(col) }}>Drop</button>
       ))
     }
     </div>
