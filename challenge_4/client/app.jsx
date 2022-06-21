@@ -5,13 +5,13 @@ import axios from 'axios';
 
 import Status from './components/Status.jsx';
 import Game from './components/Game.jsx';
-import helper from './helper.js';
+import gameLogic from './gameLogic.js';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      gameData: [0, 1, 2, 3, 4, 5, 6].map(row => ( Array(7).fill('').slice() )), // initialize the game board
+      gameData: [0, 1, 2, 3, 4, 5].map(row => ( Array(7).fill('').slice() )), // initialize the game board
       redIsNext: true, // red always starts the game
       message: '' // before detecting winning/tie, no display of message
     };
@@ -33,7 +33,7 @@ class App extends React.Component {
   handleDropButton( col, redIsNext) {
     // get the row information
     var player = redIsNext ? 'red' : 'black';
-    var row = helper.getToggledRow(this.state.gameData, col);
+    var row = gameLogic.getToggledRow(this.state.gameData, col);
 
     console.log(row, col, player);
     axios({
