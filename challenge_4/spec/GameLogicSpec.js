@@ -5,13 +5,12 @@ describe('Detect win', function() {
 
   describe('Empty board', function() {
     var emptyBoard = [
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
-      ['', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', '']
     ];
 
     it('should not detect horizontal win', function() {
@@ -35,26 +34,24 @@ describe('Detect win', function() {
   describe('Red winning', function() {
     it('should detect a horizontal win', function() {
       var horizontalWin = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['red', 'black', 'red', 'red', 'red', 'red'],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['black', 'red', 'black', 'red', 'red', 'red', 'red'],
       ];
       expect(detectHorizontalWin(horizontalWin)).to.equal('red');
     });
 
     it('should detect a vertical win', function() {
       var verticalWin = [
-        ['red', '', '', '', '', ''],
-        ['red', '', '', '', '', ''],
-        ['red', '', '', '', '', ''],
-        ['red', '', '', '', '', ''],
-        ['black', '', '', '', '', ''],
-        ['black', '', '', '', '', ''],
-        ['red', '', '', '', '', ''],
+        ['red', '', '', '', '', '', ''],
+        ['red', '', '', '', '', '', ''],
+        ['red', '', '', '', '', '', ''],
+        ['red', '', '', '', '', '', ''],
+        ['black', '', '', '', '', '', ''],
+        ['black', '', '', '', '', '', '']
       ];
 
       expect(detectVerticalWin(verticalWin)).to.equal('red');
@@ -63,13 +60,12 @@ describe('Detect win', function() {
 
     it('should detect a major diagnal win', function() {
       var diagnalWin = [
-        ['red', '', '', '', '', ''],
-        ['', 'red', '', '', '', ''],
-        ['', '', 'red', '', '', ''],
-        ['', '', '', 'red', '', ''],
-        ['', '', '', '', 'black', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
+        ['red', '', '', '', '', '', ''],
+        ['', 'red', '', '', '', '', ''],
+        ['', '', 'red', '', '', '', ''],
+        ['', '', '', 'red', '', '', ''],
+        ['', '', '', '', 'black', '', ''],
+        ['', '', '', '', '', '', ''],
       ];
 
       expect(detectDiagnalWin(diagnalWin)).to.equal('red');
@@ -77,13 +73,12 @@ describe('Detect win', function() {
 
     it('should detect a minor diagnal win', function() {
       var diagnalWin = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', 'black', ''],
-        ['', '', '', 'red', '', ''],
-        ['', '', 'red', '', '', ''],
-        ['', 'red', '', '', '', ''],
-        ['red', '', '', '', '', ''],
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', 'black', ''],
+        ['', '', '', '', 'red', '', ''],
+        ['', '', '', 'red', '', '', ''],
+        ['', '', 'red', '', '', '', ''],
+        ['', 'red', '', '', '', '', ''],
       ];
       expect(detectDiagnalWin(diagnalWin)).to.equal('red');
     });
@@ -94,13 +89,12 @@ describe('Detect win', function() {
 
     it('should detect a horizontal win', function(){
       var horizontalWin = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['black', 'black', 'black', 'black', 'red', 'red'],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['black', 'black', 'black', 'black', 'red', 'red', ''],
       ];
       expect(detectHorizontalWin(horizontalWin)).to.equal('black');
     })
@@ -108,13 +102,12 @@ describe('Detect win', function() {
 
     it('should detect a vertical win', function() {
       var verticalWin = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', 'red'],
-        ['', '', '', '', '', 'black'],
-        ['', '', '', '', '', 'black'],
-        ['', '', '', '', '', 'black'],
-        ['', '', '', '', '', 'black'],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', 'red'],
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', '', 'black'],
       ];
       expect(detectVerticalWin(verticalWin)).to.equal('black');
     });
@@ -122,26 +115,25 @@ describe('Detect win', function() {
 
     it('should detect a major diagnal win', function() {
       var diagnalWin = [
-        ['', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
-        ['', 'red', '', '', '', ''],
-        ['', '', 'black', '', '', ''],
-        ['', '', '', 'black', '', ''],
-        ['', '', '', '', 'black', ''],
-        ['', '', '', '', '', 'black'],
+        ['', 'red', '', '', '', '', ''],
+        ['', '', 'red', '', '', '', ''],
+        ['', '', '', 'black', '', '', ''],
+        ['', '', '', '', 'black', '', ''],
+        ['', '', '', '', '', 'black', ''],
+        ['', '', '', '', '', '', 'black'],
       ];
       expect(detectDiagnalWin(diagnalWin)).to.equal('black');
     });
 
     it('should detect a minor diagnal win', function() {
       var diagnalWin = [
-        ['', '', '', '', '', 'black'],
-        ['', '', '', '', 'black', ''],
-        ['', '', '', 'black', '', ''],
-        ['', '', 'black', '', '', ''],
-        ['', 'red', '', '', '', ''],
-        ['red', '', '', '', '', ''],
-        ['', '', '', '', '', ''],
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', 'black', ''],
+        ['', '', '', '', 'black', '', ''],
+        ['', '', '', 'black', '', '', ''],
+        ['', '', 'red', '', '', '', ''],
+        ['', 'red', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
       ];
       expect(detectDiagnalWin(diagnalWin)).to.equal('black');
     });

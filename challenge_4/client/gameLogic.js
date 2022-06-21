@@ -122,7 +122,7 @@ const gameLogic = {
       i = row;
       j = col;
 
-      while(gameData[i][j]) {
+      while(gameData[i] && gameData[i][j]) {
         var cell = gameData[i][j];
 
         if(count === 4) {
