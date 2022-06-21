@@ -9,11 +9,23 @@ const gameLogic = {
   },
 
   // detect win
+  detectWin: (gameData) => {
+    var horizontalWin = gameLogic._detectHorizontalWin(gameData);
+    var verticalWin = gameLogic._detectVerticalWin(gameData);
+    var diagnalWin = gameLogic._detectDiagnalWin(gameData);
+
+    if(horizontalWin || verticalWin || diagnalWin) {
+      return horizontalWin || verticalWin || diagnalWin;
+    }
+  },
 
   // detect tie
+  detectTie: (gameData) => {
+
+  },
 
   // detect horizontal win
-  detectHorizontalWin: (gameData) => {
+  _detectHorizontalWin: (gameData) => {
     for(var i = 0; i < gameData.length; i++) {
       var rowData = gameData[i];
       var rowMatch = gameLogic._rowMatch(rowData);
@@ -54,7 +66,7 @@ const gameLogic = {
   },
 
   // detect vertical win
-  detectVerticalWin: (gameData) => {
+  _detectVerticalWin: (gameData) => {
     for(var i = 0; i < gameData[0].length; i++) {
       var colMatch = gameLogic._colMatch(gameData, i);
       if(colMatch) {
@@ -99,7 +111,7 @@ const gameLogic = {
   },
 
   // detect diagnal win
-  detectDiagnalWin: (gameData) => {
+  _detectDiagnalWin: (gameData) => {
     for(var i = 0; i < gameData[0].length; i++) {
       var majorDiagnalMatch = gameLogic._majorDiagnalMatch(gameData, i);
       var minorDiagnalMatch = gameLogic._minorDiagnalMatch(gameData, i);
@@ -161,6 +173,49 @@ const gameLogic = {
 
   // detect minor diagnal match (top right -> bottom left)
   _minorDiagnalMatch: (gameData, col) => {
+    var color = '';
+    var count = 0;
+    var row = 0;
+    var i, j;
+
+    while(row < 3) {
+      i = row;
+      j = col;
+
+      while(gameData[i] && gameData[i][j]) {
+        var cell = gameData[i][j];
+
+        if(count === 4) {
+          return color;
+        }
+
+        // cell is empty
+        if(cell === '') {
+          i ++;
+          j --;
+          continue;
+        } else {
+
+          // if color matches
+          if(color === cell) {
+            count ++;
+          } else {
+          // else reassign color, count start over
+            color = cell;
+            count = 1;
+          }
+
+          i ++;
+          j --;
+        }
+      }
+      row ++;
+    }
+
+    if(count === 4) {
+      return color;
+    }
+
     return null;
   }
 }

@@ -1,7 +1,9 @@
 describe('Detect win', function() {
-  var detectHorizontalWin = gameLogic.detectHorizontalWin;
-  var detectVerticalWin = gameLogic.detectVerticalWin;
-  var detectDiagnalWin = gameLogic.detectDiagnalWin;
+  var detectHorizontalWin = gameLogic._detectHorizontalWin;
+  var detectVerticalWin = gameLogic._detectVerticalWin;
+  var detectDiagnalWin = gameLogic._detectDiagnalWin;
+  var detectWin = gameLogic.detectWin;
+  var detectTie = gameLogic.detectTie;
 
   describe('Empty board', function() {
     var emptyBoard = [
@@ -21,13 +23,17 @@ describe('Detect win', function() {
       expect(detectVerticalWin(emptyBoard)).to.equal(null);
     });
 
-    it('should detect not a major diagnal win', function() {
+    it('should not detect a major diagnal win', function() {
       expect(detectDiagnalWin(emptyBoard)).to.equal(null);
     });
 
-    it('should detect not a minor diagnal win', function() {
+    it('should not detect a minor diagnal win', function() {
       expect(detectDiagnalWin(emptyBoard)).to.equal(null);
     });
+
+    it('should not detect a tie', function() {
+      expect(detectTie(emptyBoard)).to.equal(null);
+    })
 
   })
 
@@ -83,6 +89,18 @@ describe('Detect win', function() {
       expect(detectDiagnalWin(diagnalWin)).to.equal('red');
     });
 
+    it('should detect a win', function() {
+      var redWin = [
+        ['', '', '', '', '', '', 'black'],
+        ['', '', '', '', '', 'black', 'red'],
+        ['', '', '', '', 'red', 'red', 'red'],
+        ['', '', '', 'red', 'black', 'red', 'black'],
+        ['', '', 'red', 'red', 'red', 'black', 'black'],
+        ['', 'red', 'black', 'red', 'black', 'black', 'black'],
+      ];
+      expect(detectWin(redWin)).to.equal('red');
+    });
+
   })
 
   describe('Black winning', function() {
@@ -136,6 +154,18 @@ describe('Detect win', function() {
         ['', '', '', '', '', '', ''],
       ];
       expect(detectDiagnalWin(diagnalWin)).to.equal('black');
+    });
+
+    it('should detect a win', function() {
+      var blackWin = [
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', ''],
+        ['red', 'black', 'red', '', '', '', ''],
+        ['black', 'red', 'black', 'red', '', '', ''],
+        ['black', 'black', 'black', 'black', 'red', 'red', ''],
+      ];
+      expect(detectWin(blackWin)).to.equal('black');
     });
 
   })
