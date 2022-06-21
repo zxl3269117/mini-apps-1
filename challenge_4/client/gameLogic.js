@@ -220,5 +220,5 @@ const gameLogic = {
   }
 }
 
-var module = {};
+// var module = {};
 module.exports = gameLogic;

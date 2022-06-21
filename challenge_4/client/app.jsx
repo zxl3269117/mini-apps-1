@@ -50,7 +50,14 @@ class App extends React.Component {
       .then(response => {
         console.log(response);
         // set state to reflect updated gameData
-        this.setState({ gameData: response.data, redIsNext: !this.state.redIsNext});
+        var winningPlayer = gameLogic.detectWin(response.data);
+        if(winningPlayer) {
+          this.setState({ gameData: response.data, message: `${winningPlayer} WIN!`});
+          // disable button function
+
+        } else {
+          this.setState({ gameData: response.data, redIsNext: !this.state.redIsNext});
+        }
       })
       .catch(err => { console.log(err) });
   }
