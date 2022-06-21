@@ -28,8 +28,16 @@ body {
   width: 60px;
   text-align: center;
   padding: 10px, 20px;
+}
+
+.play-button {
   margin-left: 10px;
   margin-bottom: 10px;
+}
+
+.occupied {
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 
 .red {

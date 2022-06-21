@@ -7,10 +7,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Dummy database
-var gameData = Array(7).fill(Array(7).fill(''));
+var gameRow = Array(7).fill('');
+var gameData = [0, 1, 2, 3, 4, 5, 6].map(row => ( gameRow.slice() ));
 
 app.get('/api/start', (req, res) => {
-  gameData = Array(7).fill(Array(7).fill(''));
+  gameRow = Array(7).fill('');
+  gameData = [0, 1, 2, 3, 4, 5, 6].map(row => ( gameRow.slice() ));
   res.status(200).json(gameData);
 });
 
@@ -20,8 +22,6 @@ app.post('/api/connect-four', (req, res) => {
   var col = req.body.col;
   var player = req.body.player;
   console.log(gameData[row][col], row, col, player);
-  // var newRow = gameData[row].splice(col, 1, player);
-  // gameData[row] = newRow;
   gameData[row][col] = player;
   console.log(gameData);
   res.sendStatus(201);

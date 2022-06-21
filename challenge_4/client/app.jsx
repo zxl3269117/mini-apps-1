@@ -11,7 +11,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      gameData: Array(7).fill(Array(7).fill('')), // initialize the game board
+      gameData: [0, 1, 2, 3, 4, 5, 6].map(row => ( Array(7).fill('').slice() )), // initialize the game board
       redIsNext: true, // red always starts the game
       message: '' // before detecting winning/tie, no display of message
     };
@@ -49,8 +49,6 @@ class App extends React.Component {
       })
       .then(response => {
         console.log(response);
-        // change player
-        // var redIsNext = !this.state.redIsNext;
         // set state to reflect updated gameData
         this.setState({ gameData: response.data, redIsNext: !this.state.redIsNext});
       })
