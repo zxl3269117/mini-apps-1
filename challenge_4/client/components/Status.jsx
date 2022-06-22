@@ -11,7 +11,7 @@ const Status = (props) => (
     )
     :
     <div className="message">
-      <p>{props.message}</p>
+      <h4>{props.message}</h4>
     </div>
   }
   </div>

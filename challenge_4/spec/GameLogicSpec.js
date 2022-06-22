@@ -32,7 +32,7 @@ describe('Detect win', function() {
     });
 
     it('should not detect a tie', function() {
-      expect(detectTie(emptyBoard)).to.equal(null);
+      expect(detectTie(emptyBoard)).to.equal(false);
     })
 
   })
@@ -167,6 +167,19 @@ describe('Detect win', function() {
       ];
       expect(detectWin(blackWin)).to.equal('black');
     });
+  });
 
+  describe('Other cases', function() {
+    it('should not detect win', function() {
+      var board = [
+        ['black', 'black', 'red', 'red', '', '', ''],
+        ['red', 'red', 'black', 'black', '', '', ''],
+        ['black', 'black', 'red', 'red', '', '', ''],
+        ['red', 'red', 'black', 'black', '', '', ''],
+        ['black', 'black', 'red', 'red', 'black', '', 'black'],
+        ['red', 'red', 'black', 'black', 'red', '', 'red']
+      ];
+      expect(detectWin(board)).to.equal(null);
+    })
   })
 })

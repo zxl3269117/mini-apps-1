@@ -17,13 +17,12 @@ app.get('/api/start', (req, res) => {
 });
 
 app.post('/api/connect-four', (req, res) => {
-  console.log('request data', req.body);
+  // console.log('request data', req.body);
+
   var row = req.body.row;
   var col = req.body.col;
   var player = req.body.player;
-  console.log(gameData[row][col], row, col, player);
   gameData[row][col] = player;
-  console.log(gameData);
   res.sendStatus(201);
 });
 

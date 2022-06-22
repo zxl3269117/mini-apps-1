@@ -17,11 +17,21 @@ const gameLogic = {
     if(horizontalWin || verticalWin || diagnalWin) {
       return horizontalWin || verticalWin || diagnalWin;
     }
+
+    return null;
   },
 
   // detect tie
   detectTie: (gameData) => {
-
+    var tie = true;
+    // check if all spaces are occupied
+    for(var i = 0; i < gameData.length; i++) {
+      if(gameData[i].includes('')) {
+        tie = false;
+        break;
+      }
+    }
+    return tie;
   },
 
   // detect horizontal win
@@ -115,6 +125,7 @@ const gameLogic = {
     for(var i = 0; i < gameData[0].length; i++) {
       var majorDiagnalMatch = gameLogic._majorDiagnalMatch(gameData, i);
       var minorDiagnalMatch = gameLogic._minorDiagnalMatch(gameData, i);
+
       if(majorDiagnalMatch || minorDiagnalMatch) {
         return majorDiagnalMatch || minorDiagnalMatch;
       }
@@ -126,13 +137,13 @@ const gameLogic = {
   // detect major diagnal match (top left -> bottom right)
   _majorDiagnalMatch: (gameData, col) => {
     var color = '';
-    var count = 0;
     var row = 0;
-    var i, j;
+    var i, j, count;
 
     while(row < 3) {
       i = row;
       j = col;
+      count = 0;
 
       while(gameData[i] && gameData[i][j]) {
         var cell = gameData[i][j];
@@ -174,13 +185,13 @@ const gameLogic = {
   // detect minor diagnal match (top right -> bottom left)
   _minorDiagnalMatch: (gameData, col) => {
     var color = '';
-    var count = 0;
     var row = 0;
-    var i, j;
+    var i, j, count;
 
     while(row < 3) {
       i = row;
       j = col;
+      count = 0;
 
       while(gameData[i] && gameData[i][j]) {
         var cell = gameData[i][j];
@@ -220,5 +231,8 @@ const gameLogic = {
   }
 }
 
-// var module = {};
+// if(!module) {
+//   var module = {};
+// }
+
 module.exports = gameLogic;

@@ -6,6 +6,7 @@ const Game = (props) => (
     <div className="game-play">{
       Array.from(Array(7).keys()).map(col => (
         <button
+          disabled={props.gameEnds ? true : false}
           className={`play-button ${props.redIsNext ? 'red' : 'black'}`}
           onClick={event => { props.handleDropButton(col, props.redIsNext) }}>Drop
         </button>

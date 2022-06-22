@@ -35,7 +35,7 @@ class App extends React.Component {
     var player = redIsNext ? 'red' : 'black';
     var row = gameLogic.getToggledRow(this.state.gameData, col);
 
-    console.log(row, col, player);
+    console.log('Disc dropped at', row, col, player);
     axios({
       method: 'post',
       url: '/api/connect-four',
@@ -48,13 +48,17 @@ class App extends React.Component {
         })
       })
       .then(response => {
-        console.log(response);
+        // console.log(response);
+
         // set state to reflect updated gameData
+        var tie = gameLogic.detectTie(response.data);
         var winningPlayer = gameLogic.detectWin(response.data);
         if(winningPlayer) {
           this.setState({ gameData: response.data, message: `${winningPlayer} WIN!`});
           // disable button function
 
+        } else if(tie) {
+          this.setState({ gameData: response.data, message: `It's a TIE!`});
         } else {
           this.setState({ gameData: response.data, redIsNext: !this.state.redIsNext});
         }
@@ -73,6 +77,7 @@ class App extends React.Component {
         <Game
           gameData={this.state.gameData}
           redIsNext={this.state.redIsNext}
+          gameEnds={this.state.message}
           handleDropButton = {this.handleDropButton}
         />
       </div>
