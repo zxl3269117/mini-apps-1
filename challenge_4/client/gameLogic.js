@@ -231,8 +231,4 @@ const gameLogic = {
   }
 }
 
-// if(!module) {
-//   var module = {};
-// }
-
 module.exports = gameLogic;
