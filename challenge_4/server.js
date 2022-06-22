@@ -11,6 +11,7 @@ var gameRow = Array(7).fill('');
 var gameData = [0, 1, 2, 3, 4, 5].map(row => ( gameRow.slice() ));
 
 app.get('/api/start', (req, res) => {
+  // initiate app with an empty game board
   gameRow = Array(7).fill('');
   gameData = [0, 1, 2, 3, 4, 5].map(row => ( gameRow.slice() ));
   res.status(200).json(gameData);
